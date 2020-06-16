@@ -32,8 +32,15 @@ var vcont = d3.select(".container");
 vcont.classed("container", false);
 vcont.classed("container-fluid", true);
 
+// Remove onchange attribute to fix console error
+
+var onchg = d3.select("#selDataset");
+var newchg = onchg.attr("onchange", null);
+
 // Read Json file using D3
 // 
+// url = "samples.json";
+// d3.json(url).then(function(bbbDataset) {
 d3.json("samples.json").then(function(bbbDataset) {
 
   // Extract Individual Ids
@@ -54,7 +61,7 @@ d3.json("samples.json").then(function(bbbDataset) {
     // Filter sample data record 
 
     var filteredSample = bbbDataset.samples.filter(data => data.id == inputVal);
-    console.log("Sample Row : ", filteredSample);
+    // console.log("Filtered Row : ", filteredSample);
     
     // Extract sample_values
     var sampleValues = filteredSample[0].sample_values;
@@ -62,7 +69,7 @@ d3.json("samples.json").then(function(bbbDataset) {
 
     // Checking if we have sample values otherwise resetting to default
     if (sampleValues.length == 0) {
-      alert("No Samples found for this Id. Setting back to Default Id. Try again!!!");
+      alert(`No Samples found for the Id : ${inputVal}. Setting back to Default Id. Try again!!!`);
       d3.select("#selDataset").node().value = "940";
       inputVal = '940';
       var filteredSample = bbbDataset.samples.filter(data => data.id == inputVal);
@@ -75,7 +82,7 @@ d3.json("samples.json").then(function(bbbDataset) {
     // Extract Demographic data record 
 
     var filteredDemorow = bbbDataset.metadata.filter(data => data.id == inputVal);
-    console.log("Metadata Row : ", filteredDemorow);
+    // console.log("Metadata Row : ", filteredDemorow);
 
     // Part-2 : Display Demographic Info
 
@@ -90,23 +97,19 @@ d3.json("samples.json").then(function(bbbDataset) {
     // Slice Top 10 sample values
 
     var sampleValuestop10 = sampleValues.slice(0, 10).reverse();
-    // var slicedValues = sampleValues.slice(0, 10);
-    // var reversedValues = slicedValues.reverse();
-    // var sampleValuestop10 = reversedValues.map((x) => parseInt(x));
-    console.log("Sample Values:", sampleValuestop10);
+    // console.log("Sample Values:", sampleValuestop10);
  
     // Extract otu_ids
     var otuids = filteredSample[0].otu_ids;
     var slicedOtuids = otuids.slice(0, 10).reverse();
     var otuidsTop10 = slicedOtuids.map(function(oi) { return 'OTU '+oi; });
     // var  otuidsTop10 = otuids.slice(0, 10);
-    console.log("Otu Ids:", otuidsTop10);
+    // console.log("Otu Ids:", otuidsTop10);
     
     // Extract otu_labels
     var  otulabels = filteredSample[0].otu_labels;
     var  otulabelsTop10 = otulabels.slice(0, 10).reverse();
-    // var  otulabelsTop10 = otulabels.slice(0, 10);
-    console.log("Otu Labels:", otulabelsTop10);
+    // console.log("Otu Labels:", otulabelsTop10);
 
     // Plot preparation
     var trace1 = {
